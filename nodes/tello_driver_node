@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 import rospy
 from std_msgs.msg import Empty, UInt8, Bool
 from std_msgs.msg import UInt8MultiArray
@@ -44,7 +44,7 @@ class RospyLogger(logger.Logger):
     def error(self, s):
         if self.log_level < logger.LOG_ERROR:
             return
-        rospy.logerr(s)
+        # rospy.logerr(s)
 
     def warn(self, s):
         if self.log_level < logger.LOG_WARN:
@@ -79,6 +79,8 @@ class TelloNode(tello.Tello):
     def __init__(self):
         self.local_cmd_client_port = int(
             rospy.get_param('~local_cmd_client_port', 8890))
+        flag = int(
+            rospy.get_param('~local_device', 1))
         self.local_vid_server_port = int(
             rospy.get_param('~local_vid_server_port', 6038))
         self.tello_ip = rospy.get_param('~tello_ip', '192.168.10.1')
@@ -98,8 +100,16 @@ class TelloNode(tello.Tello):
         # fast_mode attribute before inheritance from TelloPy object (see override __send_stick_command)
         self.fast_mode = False        
 #########################################END#######################################    
+        
+        if flag == 1:
+                super(TelloNode, self).__init__(port=9000, teste='wlo1')
+        elif flag == 2:
+                super(TelloNode, self).__init__(port=9000, teste='wlx00e04c1d253f')
+        elif flag == 3:
+                super(TelloNode, self).__init__(port=9000, teste='wlp3s0')
+        else:
+                super(TelloNode, self).__init__(port=9000, teste='wlp2s0')
 
-        super(TelloNode, self).__init__(port=9000)
         rospy.loginfo('Connecting to drone @ %s:%d' % self.tello_addr)
         self.connect()
         try:

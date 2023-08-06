@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<launch>
+
+	<arg name="namespace"	default="tello" />
+	<group ns="$(arg namespace)">
+		<node pkg="image_transport" name="image_compressed" type="republish" args="compressed in:=/tello/image_raw  raw out:=/tello/image_raw/raw _image_transport:=h264" />
+	</group>	
+
+</launch>
