@@ -7,23 +7,35 @@ Developing of the tello_driver ROS package is inspired by [tello_driver](https:/
 
 ## Installation
 
-### ROS distribution  
-Binary release from the ROS repository:  
-* Kinetic: ``` $ sudo apt install ros-kinetic-tello-driver```
+### camera_info_manager_py
+dependencie of tello_driver
+https://github.com/ros-perception/camera_info_manager_py
 
-### Build from source
-* ```$ cd <CATKIN_WS/SRC>```
-* ```$ git clone --recursive https://github.com/appie-17/tello_driver.git```
-* ```$ cd ..```
-* ```$ catkin_make```
-* ```$ source devel/setup.bash```
+### tello_driver
+
+foi feito baseado no seguinte pacote:
+
+https://github.com/appie-17/tello_driver
+
+```
+sudo apt install ros-noetic-codec-image-transport
+
+sudo apt-get install python3-wheel
+
+cd tello_driver/src/tellopy/tellopy
+
+python3 setup.py bdist_wheel
+
+sudo apt-get install python3-pip
+
+pip3 install dist/tellopy-*.dev*.whl --upgrade
+```
 
 ## Launch
 
 * Turn on Tello drone
 * Connect to drone's WiFi access point (```TELLO_XXXXXX)```
 * ```$ roslaunch tello_driver tello_node.launch```
-* ```$ roslaunch tello_driver joy_teleop.launch```
 
 # 2. Nodes
 
@@ -42,16 +54,14 @@ Main node running as interface for the TelloPy library
 * ```/tello/manual_takeoff``` [std_msgs/Empty](http://docs.ros.org/api/std_msgs/html/msg/Empty.html)
 * ```/tello/throw_takeoff``` [std_msgs/Empty](http://docs.ros.org/api/std_msgs/html/msg/Empty.html)
 
+
 ### Published topics
-* ```/tello/camera/camera_info``` [sensor_msgs/CameraInfo](http://docs.ros.org/api/sensor_msgs/html/msg/CameraInfo.html)
-* ```/tello/image_raw``` [sensor_msgs/Image](http://docs.ros.org/api/sensor_msgs/html/msg/Image.html)
-* ```/tello/imag/raw/h264``` [h264_image_transport/H264Packet](https://github.com/tilk/h264_image_transport/blob/master/msg/H264Packet.msg)
+* ```/tello/image_raw/camera_info``` [sensor_msgs/CameraInfo](http://docs.ros.org/api/sensor_msgs/html/msg/CameraInfo.html)
+* ```/tello/image_raw/h264``` [h264_image_transport/H264Packet](https://github.com/tilk/h264_image_transport/blob/master/msg/H264Packet.msg)
 * ```/tello/odom``` [nav_msgs/Odometry](http://docs.ros.org/api/nav_msgs/html/msg/Odometry.html)
 * ```/tello/imu``` [sensor_msgs/Imu](http://docs.ros.org/api/sensor_msgs/html/msg/Imu.html)
 * ```/tello/status``` [tello_driver/TelloStatus](https://github.com/appie-17/tello_driver/blob/development/msg/TelloStatus.msg)
 
-### Services
-TODO
 
 ### Parameters
 * ```~/tello_driver_node/connect_timeout_sec```
@@ -66,61 +76,3 @@ TODO
 * ```~/tello_driver_node/altitude_limit```
 * ```~/tello_driver_node/attitude_limit```
 * ```~/tello_driver_node/low_bat_threshold```
-
-## 2.2 gamepad_teleop_node
-Converting gamepad input controls from ```joy_node``` to commands for ```tello_driver_node```
-
-### Subscribed topics
-* ```/joy``` [sensor_msgs/Joy](http://docs.ros.org/api/sensor_msgs/html/msg/Joy.html)
-* ```/tello/agent_cmd_vel_in``` [geometry_msgs/Twist](http://docs.ros.org/api/geometry_msgs/html/msg/Twist.html)
-
-### Published topic
-* ```/tello/cmd_vel``` [geometry_msgs/Twist](http://docs.ros.org/api/geometry_msgs/html/msg/Twist.html)
-* ```/tello/emergency``` [std_msgs/Empty](http://docs.ros.org/api/std_msgs/html/msg/Empty.html)
-* ```/tello/fast_mode``` [std_msgs/Empty](http://docs.ros.org/api/std_msgs/html/msg/Empty.html)
-* ```/tello/flattrim``` [std_msgs/Empty](http://docs.ros.org/api/std_msgs/html/msg/Empty.html)
-* ```/tello/flip``` [std_msgs/Uint8](http://docs.ros.org/api/std_msgs/html/msg/UInt8.html)
-* ```/tello/land``` [std_msgs/Empty](http://docs.ros.org/api/std_msgs/html/msg/Empty.html)
-* ```/tello/palm_land``` [std_msgs/Empty](http://docs.ros.org/api/std_msgs/html/msg/Empty.html)
-* ```/tello/takeoff``` [std_msgs/Empty](http://docs.ros.org/api/std_msgs/html/msg/Empty.html)
-* ```/tello/throw_takeoff``` [std_msgs/Empty](http://docs.ros.org/api/std_msgs/html/msg/Empty.html)
-
-### Services
-None
-
-### Parameters
-
-## 2.3 joy_node
-Receive input from gamepad controller and publish into ```sensor_msgs/Joy``` message
-
-### Subscribed topics
-None
-
-### Published topics
-* ```/joy``` [sensor_msgs/Joy](http://docs.ros.org/api/sensor_msgs/html/msg/Joy.html)
-
-### Services
-None 
-
-### Parameters
-* ```~/joy_node/deadzone```
-* ```~/joy_node/dev```
-
-# 3. Troubleshooting
-  * **No more video output after reconnect**  
-  Relaunch the ```tello_driver_node``` to continue the video stream after WiFi reconnection. Only an issue when using PyAV to decode h264 video instead of ROS [codec_image_transport](https://github.com/yoshito-n-students/codec_image_transport).
-
-# 4. Notes
-* **Stream raw video**  
-   Depends on [PyAV](https://github.com/mikeboers/PyAV) package: ```$ pip install av --user```  
-   
-   Installation of PyAV on Ubuntu 16.04 requires ffmpeg of at least version 3:  
-   
-   ```$ sudo add-apt-repository ppa:jonathonf/ffmpeg-3```  
-   ```$ sudo apt update && sudo apt install ffmpeg```  
-
-# 5. Work-in-progress
-
-# 6. License
-
-
