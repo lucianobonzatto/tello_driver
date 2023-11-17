@@ -9,14 +9,14 @@
 	<arg name="namespace"	default="tello" />
 	<group ns="$(arg namespace)">
 		<node pkg="tello_driver" name="control" type="tello_driver_node" output="screen">
-			<param name="local_device" value="2" />
+			<param name="local_device" value="4" />
 			<param name="local_cmd_client_port" value="$(arg local_cmd_client_port)" />
-			<param name="local_vid_server_port" value="$(arg local_vid_server_port)" />
 			<param name="tello_ip" value="$(arg tello_ip)" />
 			<param name="tello_cmd_server_port" value="$(arg tello_cmd_server_port)" />
 			<param name="connect_timeout_sec" value="10.0" />
 			<param name="stream_h264_video" value="true" />
 			<param name="camera_calibration" value="$(arg camera_calibration)" />
+			<param name="vel_cmd_scale" value="1.0" />
 
 			<remap from="/tello/camera/camera_info"	to="/tello/image_raw/camera_info" />
 			<remap from="/tello/image_raw/h264"		to="/tello/image_raw/h264" />

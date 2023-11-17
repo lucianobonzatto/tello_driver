@@ -450,10 +450,28 @@ class TelloNode(tello.Tello):
         self.pub_imu.publish(imu_msg)
 
     def cb_cmd_vel(self, msg):
-        self.set_pitch( self.__scale_vel_cmd(msg.linear.y) )
-        self.set_roll( self.__scale_vel_cmd(msg.linear.x) )
-        self.set_yaw( self.__scale_vel_cmd(msg.angular.z) )
-        self.set_throttle( self.__scale_vel_cmd(msg.linear.z) )
+
+        fx = -0.2 * abs(msg.linear.x) + 0.65
+        if(abs(msg.linear.x) > 1):
+            fx = 0.45
+
+        fy = -0.2 * abs(msg.linear.y) + 0.65
+        if(abs(msg.linear.y) > 1):
+            fy = 0.45
+
+        fz = 1.25
+        # fz = -1.1667 * abs(msg.linear.y) + 1.83 # 1 -> 1.25 com 0.5 -> 1.25 com 0.2 -> 1.6
+        # if(abs(msg.linear.y) >= 0.5):
+        #     fy = 1.25
+
+        fr = -0.4 * abs(msg.angular.z) + 1.1
+        if(abs(msg.angular.z) > 1):
+            fx = 0.7
+
+        self.set_pitch( msg.linear.y * fy )
+        self.set_roll( msg.linear.x * fx )
+        self.set_yaw( msg.angular.z * fr )   
+        self.set_throttle( msg.linear.z * fz ) 
 
     def cb_flip(self, msg):
         if msg.data < 0 or msg.data > 7: # flip integers between [0,7]
